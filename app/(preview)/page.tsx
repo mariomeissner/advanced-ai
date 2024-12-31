@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Message } from "@/components/message";
 import { useScrollToBottom } from "@/components/use-scroll-to-bottom";
 import { motion } from "framer-motion";
@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 
 export default function Home() {
   const { messages, handleSubmit, input, setInput, append } = useChat();
+  const [promptMode, setPromptMode] = useState("Standard");
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [messagesContainerRef, messagesEndRef] =
@@ -80,15 +81,25 @@ export default function Home() {
             className="flex flex-col gap-2 relative items-center w-full px-4 md:px-0"
             onSubmit={handleSubmit}
           >
-            <input
-              ref={inputRef}
-              className="bg-zinc-100 rounded-md px-2 py-1.5 w-full outline-none dark:bg-zinc-700 text-zinc-800 dark:text-zinc-300 md:max-w-[500px] max-w-[calc(100dvw-32px)]"
-              placeholder="Send a message..."
-              value={input}
-              onChange={(event) => {
-                setInput(event.target.value);
-              }}
-            />
+            <div className="flex gap-2 w-full md:max-w-[500px]">
+              <select
+                value={promptMode}
+                onChange={(e) => setPromptMode(e.target.value)}
+                className="bg-zinc-100 rounded-md px-2 py-1.5 outline-none dark:bg-zinc-700 text-zinc-800 dark:text-zinc-300 w-[120px]"
+              >
+                <option value="Standard">Standard</option>
+                <option value="Advanced">Advanced</option>
+              </select>
+              <input
+                ref={inputRef}
+                className="bg-zinc-100 rounded-md px-2 py-1.5 w-full outline-none dark:bg-zinc-700 text-zinc-800 dark:text-zinc-300"
+                placeholder="Send a message..."
+                value={input}
+                onChange={(event) => {
+                  setInput(event.target.value);
+                }}
+              />
+            </div>
           </form>
 
           {messages.length === 0 && (
